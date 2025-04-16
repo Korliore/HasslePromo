@@ -1,8 +1,6 @@
 version: "3.9"
 services:
   postgres:
-    mem_limit: 4g
-    memswap_limit: 4g
     image: postgres:15
     environment:
       POSTGRES_DB: hasslepromo
@@ -14,6 +12,8 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   bot:
+    mem_limit: 4g
+    memswap_limit: 4g
     build: .
     env_file:
       - .env
