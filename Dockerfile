@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Кэшировать модели EasyOCR
 ENV EASYOCR_CACHE_DIR=/root/.cache/easyocr
-RUN python -c "import easyocr; easyocr.Reader(['ru', 'en'], gpu=False)"
+RUN python -c "import easyocr; easyocr.Reader(['ru'], gpu=False)"
 
 COPY . .
 
