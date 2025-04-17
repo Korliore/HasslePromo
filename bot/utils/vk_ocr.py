@@ -26,10 +26,18 @@ class RecognitionError(APIError):
 
 
 class VKService:
-    def __init__(self):
-        self.host = VK_CLOUD_HOST
-        self.token = VK_CLOUD_TOKEN
-        self.session = aiohttp.ClientSession()
+    def __init__(self, session: aiohttp.ClientSession, host: str, token: str):
+        self.session = session
+        self.host = host
+        self.token = token
+
+    @classmethod
+    async def create(cls):
+        session = aiohttp.ClientSession()
+        return cls(session, VK_CLOUD_HOST, VK_CLOUD_TOKEN)
+
+    async def close(self):
+        await self.session.close()
 
     async def __aenter__(self):
         return self

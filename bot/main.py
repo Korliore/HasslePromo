@@ -6,6 +6,7 @@ from bot.models import CREATE_USERS_TABLE, CREATE_SCREENSHOTS_TABLE
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram_broadcaster import Broadcaster
+from bot.utils.vk_ocr import VKService
 
 from bot.handlers import start, screenshot, payout, admin
 
@@ -20,30 +21,12 @@ async def on_shutdown():
 
 from aiogram import BaseMiddleware
 
-class CleanChatMiddleware(BaseMiddleware):
-    async def __call__(self, handler, event, data):
-        if hasattr(event, 'chat') and hasattr(event, 'from_user'):
-            bot = data.get('bot')
-            if bot is not None:
-                try:
-                    history = await bot.get_chat_history(event.chat.id, limit=20)
-                    for msg in history:
-                        # Удаляем все сообщения кроме текущего
-                        if msg.message_id != getattr(event, 'message_id', None):
-                            try:
-                                await bot.delete_message(event.chat.id, msg.message_id)
-                            except Exception:
-                                pass
-                except Exception:
-                    pass
-        return await handler(event, data)
-
 
 async def main():
     bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
-    dp.message.middleware(CleanChatMiddleware())
-    dp.callback_query.middleware(CleanChatMiddleware())
+    vk_service = await VKService.create()
+    dp["vk_service_ocr"] = vk_service
     dp.include_router(start.router)
     dp.include_router(screenshot.router)
     dp.include_router(payout.router)
