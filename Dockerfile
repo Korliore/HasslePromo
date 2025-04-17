@@ -9,10 +9,6 @@ RUN apt-get update && \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt  --extra-index-url https://download.pytorch.org/whl/cu111
 
-# Кэшировать модели EasyOCR
-ENV EASYOCR_CACHE_DIR=/root/.cache/easyocr
-RUN python -c "import easyocr; easyocr.Reader(['ru'], gpu=False)"
-
 COPY . .
 
 CMD ["python", "-m", "bot.main"]
