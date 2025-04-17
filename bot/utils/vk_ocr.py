@@ -112,9 +112,3 @@ class VKService:
 
         except aiohttp.ClientError as e:
             raise APIError(f"Connection error: {str(e)}")
-
-
-
-
-# Инициализация сервисов
-vk_service_ocr = VKService()
