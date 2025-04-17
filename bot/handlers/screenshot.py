@@ -2,7 +2,6 @@ from aiogram import Router, types, F
 from aiogram.filters import Command
 from bot.config import LOG_CHAT_ID
 from bot.db import db
-from bot.utils.vk_ocr import vk_service_ocr
 from aiogram.enums import ChatType
 
 router = Router()
