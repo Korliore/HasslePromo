@@ -32,14 +32,11 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
     f = await bot.get_file(message.photo[-1].file_id)
     data_bytes = (await bot.download_file(f.file_path)).read()
 
-    # Распознаём (без лишних танцев с именами) – filename по умолчанию "file"
     img_text = await vk_service_ocr.recognize_text(data_bytes)
-    await message.answer(f"Отлично! Распознаный текст. {img_text}")
 
-    # await db.execute(
-    #     "INSERT INTO screenshots (user_id, file_id) VALUES ($1, $2)",
-    #     message.from_user.id, message.photo[-1].file_id
-    # )
+    is_valid = await vk_service_ocr.validate_screen(img_text)
+
+
     # if is_valid:
     #     await db.execute(
     #         "UPDATE users SET balance = balance + 200, has_sent_screenshot = TRUE WHERE telegram_id = $1",
@@ -49,10 +46,10 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
     # else:
     #     await message.answer("Мы не смогли проверить твой скриншот. Попробуй прислать другое изображение!", reply_markup=ok_keyboard)
     #
-    # valid_str = "Да" if is_valid else "Нет"
-    # # Отправка скрина лог-чату
-    # await bot.send_photo(LOG_CHAT_ID, message.photo[-1].file_id,
-    #                      caption=f"Скриншот от @{message.from_user.username or message.from_user.id}. Валидный: {valid_str}")
+    valid_str = "Да" if is_valid else "Нет"
+    # Отправка скрина лог-чату
+    await bot.send_photo(LOG_CHAT_ID, message.photo[-1].file_id,
+                         caption=f"Скриншот от @{message.from_user.username or message.from_user.id}. Валидный: {valid_str}")
 
 
 

@@ -4,6 +4,7 @@ import logging
 from mimetypes import guess_type
 from typing import Optional
 from bot.config import VK_CLOUD_TOKEN, VK_CLOUD_HOST
+import re
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("[OCR]")
@@ -81,3 +82,16 @@ class VKService:
                 return obj.get("text", "")
         except aiohttp.ClientError as e:
             raise APIError(f"Connection error: {e}")
+
+    async def validate_screen(text: str) -> bool:
+        success_phrases = [
+            "РЕГИСТРАЦИЯПРОЙДЕНА",
+            "УСПЕШНОУДАЧНОЙИГРЫ",
+        ]
+
+        # Убираем все знаки препинания, пробелы и приводим к верхнему регистру
+        cleaned_text = re.sub(r'[^\w]', '', text).upper()
+
+        # Если хотя бы одна фраза есть в тексте — скрин валидный
+        return any(phrase in cleaned_text for phrase in success_phrases)
+
