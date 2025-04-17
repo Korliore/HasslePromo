@@ -15,11 +15,7 @@ REQUIRED_COLOR = (30, 237, 130)
 @router.message(F.photo, F.chat.type == ChatType.PRIVATE)
 async def handle_screenshot(message: types.Message, bot: Bot, **data):
     # Удаляем все последние сообщения пользователя (фото, текст и т.д.)
-<<<<<<<<<<<<<<  ✨ Codeium Command ⭐ >>>>>>>>>>>>>>>>
-    """
-    Handles incoming photo messages in private chats, checks if the user has already sent a screenshot, 
 
-<<<<<<<  33a6ce6b-f7c8-4aed-b403-074bba26a8a4  >>>>>>>
     ok_keyboard = types.InlineKeyboardMarkup(
         inline_keyboard=[
             [types.InlineKeyboardButton(text="Меню", callback_data="menu")]
@@ -30,7 +26,7 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
                              message.from_user.id)
     if not user or user["has_sent_screenshot"]:
         await message.answer("Ты уже отправил скриншот!", reply_markup=ok_keyboard)
-        # return # для теста
+        return
 
     file = await bot.get_file(message.photo[-1].file_id)
     file_bytes = await bot.download_file(file.file_path)
@@ -69,7 +65,9 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
             chat_id=message.from_user.id,
             media=media,
         )
-        await message.answer("Нам не удалось проверить твою регистрацию. Пожалуйста, обрати внимание на примеры и отправь новый скриншот.", reply_markup=ok_keyboard)
+        await message.answer(
+            "Нам не удалось проверить твою регистрацию. Пожалуйста, обрати внимание на примеры и отправь новый скриншот.",
+            reply_markup=ok_keyboard)
     valid_str = "Да" if is_valid else "Нет"
     # Отправка скрина лог-чату
     await bot.send_photo(LOG_CHAT_ID, message.photo[-1].file_id,
