@@ -76,7 +76,7 @@ async def balance_callback(call: types.CallbackQuery):
             [types.InlineKeyboardButton(text="Меню", callback_data="menu")]
         ]
     )
-    await call.message.answer(f"Твой баланс: {value}₽.", reply_markup=menu_keyboard)
+    await call.message.answer(f"Твой баланс: {value}₽.\n\nДля вывода денег перейди в раздел 'Выплата'", reply_markup=menu_keyboard)
 
 @router.callback_query(lambda c: c.data == "menu")
 async def menu_callback(call: types.CallbackQuery):
