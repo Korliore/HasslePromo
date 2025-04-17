@@ -37,19 +37,19 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
     is_valid = await vk_service_ocr.validate_screen(img_text)
 
 
-    # if is_valid:
-    #     await db.execute(
-    #         "UPDATE users SET balance = balance + 200, has_sent_screenshot = TRUE WHERE telegram_id = $1",
-    #         message.from_user.id
-    #     )
-    #     await message.answer("Отлично! Ты выполнил условия! На твой баланс добавлено 200 рублей!", reply_markup=ok_keyboard)
-    # else:
-    #     await message.answer("Мы не смогли проверить твой скриншот. Попробуй прислать другое изображение!", reply_markup=ok_keyboard)
-    #
+    if is_valid:
+        # await db.execute(
+        #     "UPDATE users SET balance = balance + 200, has_sent_screenshot = TRUE WHERE telegram_id = $1",
+        #     message.from_user.id
+        # )
+        await message.answer("Отлично! Ты выполнил условия! На твой баланс добавлено 200 рублей!", reply_markup=ok_keyboard)
+    else:
+        await message.answer("Мы не смогли проверить твой скриншот. Посмотри на примеры скриншотов, которые нужно отправить.", reply_markup=ok_keyboard)
+
     valid_str = "Да" if is_valid else "Нет"
     # Отправка скрина лог-чату
     await bot.send_photo(LOG_CHAT_ID, message.photo[-1].file_id,
-                         caption=f"Скриншот от @{message.from_user.username or message.from_user.id}. Валидный: {valid_str}")
+                         caption=f"Скриншот от @{message.from_user.username or message.from_user.id}. Валидный: {valid_str}.\n{message.photo[-1].file_id}")
 
 
 
