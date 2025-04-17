@@ -3,14 +3,14 @@ from aiogram.filters import Command
 from bot.config import LOG_CHAT_ID
 from bot.db import db
 from bot.utils.ocr import analyze_screenshot
-
+from aiogram.enums import ChatType
 
 router = Router()
 
 REQUIRED_TEXTS = ["регистрация", "пройдена", "успешно", "удачной", "начать", "игру"]
 REQUIRED_COLOR = (30, 237, 130)
 
-@router.message(F.photo)
+@router.message(F.photo, F.chat.type == ChatType.PRIVATE)
 async def handle_screenshot(message: types.Message, bot):
     # Удаляем все последние сообщения пользователя (фото, текст и т.д.)
     try:
