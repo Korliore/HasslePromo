@@ -41,10 +41,10 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
     is_valid = await vk_service_ocr.validate_screen(img_text)
 
     if is_valid:
-        # await db.execute(
-        #     "UPDATE users SET balance = balance + 200, has_sent_screenshot = TRUE WHERE telegram_id = $1",
-        #     message.from_user.id
-        # )
+        await db.execute(
+            "UPDATE users SET balance = balance + 200, has_sent_screenshot = TRUE WHERE telegram_id = $1",
+            message.from_user.id
+        )
         await message.answer("Отлично! Ты выполнил условия! На твой баланс добавлено 200 рублей!",
                              reply_markup=ok_keyboard)
     else:
