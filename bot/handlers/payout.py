@@ -15,7 +15,13 @@ async def payout_callback(call: types.CallbackQuery):
                 [types.InlineKeyboardButton(text="Ок", callback_data="menu")]
             ]
         )
-        await call.message.answer("Ты еще не выполнил все условия! Прочитай внимательно", reply_markup=menu_keyboard)
+        text = (
+            "<b>Ты еще не выполнил все условия!</b>\n\n"
+            "1. Зарегистрируйся по ссылке https://hassle.online/ref/telega\n\n"
+            "2. Пришли мне скриншот регистрации\n\n"
+            "И получай свои денежки!!"
+        )
+        await call.message.answer(text, reply_markup=menu_keyboard)
         return
     elif user["balance"] < 500:
         menu_keyboard = types.InlineKeyboardMarkup(
@@ -23,9 +29,13 @@ async def payout_callback(call: types.CallbackQuery):
                 [types.InlineKeyboardButton(text="Получить", callback_data="menu")]
             ]
         )
-        
+        text = (
+            "🙁Платежная система ограничила выплаты от <b>500 рублей</b>\n\n"
+            "<b>Но я знаю как тебе получить целых 600!!!<b>\n\n"
+            "Нажми 'ПОЛУЧИТЬ'"
+        )
         await call.message.answer(
-            "К сожалению выплаты производятся только от 500 рублей. Но у меня хорошая новость!! Ты можешь получить еще 400 рублей. Нажми 'ПОЛУЧИТЬ'",
+            text,
             reply_markup=menu_keyboard
         )
         

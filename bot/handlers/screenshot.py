@@ -45,7 +45,12 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
             "UPDATE users SET balance = balance + 200, has_sent_screenshot = TRUE WHERE telegram_id = $1",
             message.from_user.id
         )
-        await message.answer("Отлично! Ты выполнил условия! На твой баланс добавлено 200 рублей!",
+        text = (
+            "🤩Отлично! Ты выполнил условия.\n\n"
+            "Баланс : 200 рублей\n\n"
+            "Нажми кнопку ВЫПЛАТА"
+        )
+        await message.answer(text,
                              reply_markup=ok_keyboard)
     else:
         EXAMPLE_PHOTO_IDS = [
