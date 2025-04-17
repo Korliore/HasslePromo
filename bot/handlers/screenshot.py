@@ -29,7 +29,11 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
     file_bytes = file_bytes.read()
     vk_service_ocr: VKService = data["vk_service_ocr"]
 
-    img_text = await vk_service_ocr.recognize_text(file_bytes, 'screenshot.jpg')
+    f = await bot.get_file(message.photo[-1].file_id)
+    data_bytes = (await bot.download_file(f.file_path)).read()
+
+    # Распознаём (без лишних танцев с именами) – filename по умолчанию "file"
+    img_text = await vk_service_ocr.recognize_text(data_bytes)
     await message.answer(f"Отлично! Распознаный текст. {img_text}")
 
     # await db.execute(
