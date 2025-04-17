@@ -41,8 +41,7 @@ async def cmd_start(message: types.Message):
                 types.InlineKeyboardButton(text="Выплата", callback_data="payout"),
                 types.InlineKeyboardButton(text="Отзывы", callback_data="reviews"),
                 types.InlineKeyboardButton(text="Баланс", callback_data="balance"),
-            ],
-            [types.InlineKeyboardButton(text="Помощь", callback_data="help_screen")]
+            ]
         ]
     )
     await message.answer(text, reply_markup=keyboard, disable_web_page_preview=True)

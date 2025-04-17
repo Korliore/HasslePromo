@@ -15,6 +15,11 @@ REQUIRED_COLOR = (30, 237, 130)
 @router.message(F.photo, F.chat.type == ChatType.PRIVATE)
 async def handle_screenshot(message: types.Message, bot: Bot, **data):
     # Удаляем все последние сообщения пользователя (фото, текст и т.д.)
+<<<<<<<<<<<<<<  ✨ Codeium Command ⭐ >>>>>>>>>>>>>>>>
+    """
+    Handles incoming photo messages in private chats, checks if the user has already sent a screenshot, 
+
+<<<<<<<  33a6ce6b-f7c8-4aed-b403-074bba26a8a4  >>>>>>>
     ok_keyboard = types.InlineKeyboardMarkup(
         inline_keyboard=[
             [types.InlineKeyboardButton(text="Меню", callback_data="menu")]
