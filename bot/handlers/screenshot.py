@@ -34,7 +34,6 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
 
     img_text = await vk_service_ocr.recognize_text(data_bytes)
 
-    print(img_text)
     is_valid = await vk_service_ocr.validate_screen(img_text)
 
 

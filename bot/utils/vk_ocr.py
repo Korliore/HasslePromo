@@ -83,7 +83,7 @@ class VKService:
         except aiohttp.ClientError as e:
             raise APIError(f"Connection error: {e}")
 
-    async def validate_screen(text: str) -> bool:
+    async def validate_screen(self, text: str) -> bool:
         success_phrases = [
             "РЕГИСТРАЦИЯПРОЙДЕНА",
             "УСПЕШНОУДАЧНОЙИГРЫ",
