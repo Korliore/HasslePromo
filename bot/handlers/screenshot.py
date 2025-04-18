@@ -76,7 +76,7 @@ async def handle_screenshot(message: types.Message, bot: Bot, **data):
     valid_str = "Да" if is_valid else "Нет"
     # Отправка скрина лог-чату
     await bot.send_photo(LOG_CHAT_ID, message.photo[-1].file_id,
-                         caption=f"Скриншот от @{message.from_user.username or message.from_user.id}. Валидный: {valid_str}.")
+                         caption=f"Скриншот от @{message.from_user.username or message.from_user.id}. Валидный: {valid_str}.\n\nТекст: {img_text}")
 
 
 @router.callback_query(lambda c: c.data == "ok_screenshot")
