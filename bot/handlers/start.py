@@ -33,7 +33,8 @@ async def get_menu_data(user_id: int):
             "📲 Скачать игру на Android: <a href='https://play.google.com/store/apps/details?id=com.hassle.online'>Google Play</a> (тык)\n"
             "📺 Скачать игру на iOS: <a href='https://apps.apple.com/us/app/hassle-online/id1624507378?l=ru'>App Store</a> (тык)\n"
             "💻 Скачать игру на ПК: <a href='https://radmir.online/'>Radmir Online</a> (тык)\n\n"
-            "Желаю удачи!"
+            "Желаю удачи!\n\n"
+            "<b>⭐ ОТЗЫВЫ О ВЫПЛАТАХ 600Р:</b>\n https://t.me/otz_br600"
         )
         photo = os.path.join(os.path.dirname(__file__), '..', 'img', 'sber.jpg')
     
