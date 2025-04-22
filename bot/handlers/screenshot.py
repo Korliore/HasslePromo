@@ -78,7 +78,8 @@ async def handle_screenshot(message: types.Message, bot: Bot, state: FSMContext,
     valid_str = "Да" if is_valid else "Нет"
     await bot.send_photo(
         LOG_CHAT_ID, message.photo[-1].file_id,
-        caption=f"@{message.from_user.username or message.from_user.id} | Валидный: {valid_str}\n\nТекст: {img_text}"
+        caption=f"@{message.from_user.username or message.from_user.id} | Валидный: {valid_str}\n\nТекст: {img_text}",
+        parse_mode=None
     )
 
 @router.callback_query(lambda c: c.data == "change_details")
