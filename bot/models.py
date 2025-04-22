@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS users (
     registered_at TIMESTAMP DEFAULT NOW(),
     ref_code TEXT,
     has_sent_screenshot BOOLEAN DEFAULT FALSE,
-    quest_lvl INTEGER DEFAULT 1
+    quest_lvl INTEGER DEFAULT 1,
+    payout_details TEXT  -- 🆕 информация о выплатах, может быть JSON, IBAN, карта — что угодно
 );
 """
 
