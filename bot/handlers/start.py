@@ -98,8 +98,7 @@ async def handle_join_request(event: ChatJoinRequest):
             await event.bot.send_photo(
                 chat_id=event.from_user.id,
                 photo=photo_file,
-                caption=text,
-                disable_web_page_preview=True
+                caption=text
             )
             # Отправляем клавиатуру отдельным сообщением
             await event.bot.send_message(
