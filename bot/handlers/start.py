@@ -3,14 +3,16 @@ from aiogram.filters import Command
 from bot.db import db
 import os
 from aiogram.types import ChatJoinRequest
-
+from aiogram.types.input_file import FSInputFile
+import asyncio
 router = Router()
+
 
 async def get_menu_data(user_id: int):
     row = await db.fetchrow("SELECT quest_lvl FROM users WHERE telegram_id = $1", user_id)
     quest_lvl = row["quest_lvl"] if row else None
     photo = None
-    
+
     if quest_lvl == 1:
         text = (
             "👋 Привет! Я помогу тебе легко заработать!!\n\n"
@@ -40,7 +42,7 @@ async def get_menu_data(user_id: int):
             "✅ Можно использовать аккаунт который ты регистрировал"
         )
         photo = os.path.join(os.path.dirname(__file__), '..', 'img', 'sber.jpg')
-    
+
     keyboard = types.InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -50,8 +52,9 @@ async def get_menu_data(user_id: int):
             ]
         ]
     )
-    
+
     return text, keyboard, photo
+
 
 @router.message(Command("start"))
 async def cmd_start(message: types.Message):
@@ -62,7 +65,6 @@ async def cmd_start(message: types.Message):
 
     text, keyboard, photo = await get_menu_data(message.from_user.id)
     if photo:
-        from aiogram.types.input_file import FSInputFile
         photo_file = FSInputFile(photo)
         await message.answer_photo(photo=photo_file, caption=text, disable_web_page_preview=True)
         await message.answer("Меню", reply_markup=keyboard)
@@ -73,7 +75,7 @@ async def cmd_start(message: types.Message):
 @router.chat_join_request()
 async def handle_join_request(event: ChatJoinRequest):
     # Одобряем заявку
-    print(f"Пользователь {event.from_user.id} присоединился к чату {event.chat.id}")
+    print(f"New subscriber: { {event.from_user.id} }", flush=True)
     await event.bot.approve_chat_join_request(
         chat_id=event.chat.id,
         user_id=event.from_user.id
@@ -88,10 +90,9 @@ async def handle_join_request(event: ChatJoinRequest):
 
     # Получаем данные для меню
     text, keyboard, photo = await get_menu_data(event.from_user.id)
-
+    await asyncio.sleep(2)
     try:
         if photo:
-            from aiogram.types.input_file import FSInputFile
             photo_file = FSInputFile(photo)
             # Отправляем фото с текстом
             await event.bot.send_photo(
@@ -117,11 +118,12 @@ async def handle_join_request(event: ChatJoinRequest):
     except Exception as e:
         print(f"Ошибка при отправке сообщения: {e}")
 
+
 @router.callback_query(lambda c: c.data == "reviews")
 async def reviews_callback(call: types.CallbackQuery):
     await call.answer()
     await call.message.delete()
-    
+
     menu_keyboard = types.InlineKeyboardMarkup(
         inline_keyboard=[
             [types.InlineKeyboardButton(text="Меню", callback_data="menu")]
@@ -143,28 +145,30 @@ async def reviews_callback(call: types.CallbackQuery):
         )
     await call.message.answer(text, reply_markup=menu_keyboard)
 
+
 @router.callback_query(lambda c: c.data == "balance")
 async def balance_callback(call: types.CallbackQuery):
     user = await db.fetchrow("SELECT balance FROM users WHERE telegram_id = $1", call.from_user.id)
     value = user["balance"] if user else 0
     await call.answer()
     await call.message.delete()
-    
+
     menu_keyboard = types.InlineKeyboardMarkup(
         inline_keyboard=[
             [types.InlineKeyboardButton(text="Меню", callback_data="menu")]
         ]
     )
     await call.message.answer(
-        f"🤩 Твой баланс: {value}₽.\n\nДля вывода денег перейди в раздел 'Выплата'", 
+        f"🤩 Твой баланс: {value}₽.\n\nДля вывода денег перейди в раздел 'Выплата'",
         reply_markup=menu_keyboard
     )
+
 
 @router.callback_query(lambda c: c.data == "menu")
 async def menu_callback(call: types.CallbackQuery):
     await call.answer()
     await call.message.delete()
-    
+
     text, keyboard, photo = await get_menu_data(call.from_user.id)
     if photo:
         from aiogram.types.input_file import FSInputFile
