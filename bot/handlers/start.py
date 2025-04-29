@@ -74,13 +74,6 @@ async def cmd_start(message: types.Message):
 
 @router.chat_join_request()
 async def handle_join_request(event: ChatJoinRequest):
-    # Одобряем заявку
-    print(f"New subscriber: { {event.from_user.id} }", flush=True)
-    await event.bot.approve_chat_join_request(
-        chat_id=event.chat.id,
-        user_id=event.from_user.id
-    )
-
     # Добавляем пользователя в БД
     await db.execute(
         "INSERT INTO users (telegram_id, username) VALUES ($1, $2) ON CONFLICT DO NOTHING",
