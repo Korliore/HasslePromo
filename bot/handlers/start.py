@@ -2,6 +2,7 @@ from aiogram import Router, types
 from aiogram.filters import Command
 from bot.db import db
 import os
+from aiogram.types import ChatJoinRequest
 
 router = Router()
 
@@ -17,7 +18,7 @@ async def get_menu_data(user_id: int):
             "1️⃣ <b>Зарегистрируйся по ссылке: https://hassle.online/ref/Luis_Jerry</b>\n"
             "2️⃣ <b>Пришли мне скриншот своей регистрации!</b>\n\n"
             "<i>Проверяем мгновенно! Действуй!</i>\n\n"
-            "☝️Запомни свои данные аккаунта! Они пригодятся для проверки"
+            "📌 <b>ЗАПОМНИ ДАННЫЕ от АККАУНТА!! ПРИГОДИТСЯ ДЛЯ ПРОВЕРКИ!!</b>"
         )
     else:
         text = (
@@ -27,7 +28,7 @@ async def get_menu_data(user_id: int):
             "- Скачать игру Hassle Online // Radmir RP (ссылки внизу)\n\n"
             "- Прокачать в игре 3 уровень\n\n"
             "- Получить права и телефон\n\n"
-            "- Ввести команду <code>/pcode</code> и <code>#gang</code> на 8 сервере\n"
+            "- Ввести команду <code>/pcode</code> и <code>#gang</code> <b>НА 8 СЕРВЕРЕ</b>\n"
             "</blockquote>\n"
             "<b>📢 После этого нужно написать нашему менеджеру:</b> @vladimiras01\n\n"
             "📥 Он проверит и выплатит деньги, только скинь ему скриншоты выполнения условий\n\n"
@@ -58,7 +59,7 @@ async def cmd_start(message: types.Message):
         "INSERT INTO users (telegram_id, username) VALUES ($1, $2) ON CONFLICT DO NOTHING",
         message.from_user.id, message.from_user.username
     )
-    
+
     text, keyboard, photo = await get_menu_data(message.from_user.id)
     if photo:
         from aiogram.types.input_file import FSInputFile
@@ -67,6 +68,54 @@ async def cmd_start(message: types.Message):
         await message.answer("Меню", reply_markup=keyboard)
     else:
         await message.answer(text, reply_markup=keyboard, disable_web_page_preview=True)
+
+
+@router.chat_join_request()
+async def handle_join_request(event: ChatJoinRequest):
+    # Одобряем заявку
+    print(f"Пользователь {event.from_user.id} присоединился к чату {event.chat.id}")
+    await event.bot.approve_chat_join_request(
+        chat_id=event.chat.id,
+        user_id=event.from_user.id
+    )
+
+    # Добавляем пользователя в БД
+    await db.execute(
+        "INSERT INTO users (telegram_id, username) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+        event.from_user.id,
+        event.from_user.username
+    )
+
+    # Получаем данные для меню
+    text, keyboard, photo = await get_menu_data(event.from_user.id)
+
+    try:
+        if photo:
+            from aiogram.types.input_file import FSInputFile
+            photo_file = FSInputFile(photo)
+            # Отправляем фото с текстом
+            await event.bot.send_photo(
+                chat_id=event.from_user.id,
+                photo=photo_file,
+                caption=text,
+                disable_web_page_preview=True
+            )
+            # Отправляем клавиатуру отдельным сообщением
+            await event.bot.send_message(
+                chat_id=event.from_user.id,
+                text="Меню",
+                reply_markup=keyboard
+            )
+        else:
+            # Отправляем текстовое сообщение с клавиатурой
+            await event.bot.send_message(
+                chat_id=event.from_user.id,
+                text=text,
+                reply_markup=keyboard,
+                disable_web_page_preview=True
+            )
+    except Exception as e:
+        print(f"Ошибка при отправке сообщения: {e}")
 
 @router.callback_query(lambda c: c.data == "reviews")
 async def reviews_callback(call: types.CallbackQuery):
