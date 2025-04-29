@@ -5,6 +5,7 @@ import os
 from aiogram.types import ChatJoinRequest
 from aiogram.types.input_file import FSInputFile
 import asyncio
+
 router = Router()
 
 
@@ -81,32 +82,19 @@ async def handle_join_request(event: ChatJoinRequest):
         event.from_user.username
     )
 
-    # Получаем данные для меню
-    text, keyboard, photo = await get_menu_data(event.from_user.id)
     await asyncio.sleep(2)
+    keyboard = types.InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                types.InlineKeyboardButton(text="ДА", callback_data="menu"),
+            ]
+        ]
+    )
     try:
-        if photo:
-            photo_file = FSInputFile(photo)
-            # Отправляем фото с текстом
-            await event.bot.send_photo(
-                chat_id=event.from_user.id,
-                photo=photo_file,
-                caption=text
-            )
-            # Отправляем клавиатуру отдельным сообщением
-            await event.bot.send_message(
-                chat_id=event.from_user.id,
-                text="Меню",
-                reply_markup=keyboard
-            )
-        else:
-            # Отправляем текстовое сообщение с клавиатурой
-            await event.bot.send_message(
-                chat_id=event.from_user.id,
-                text=text,
-                reply_markup=keyboard,
-                disable_web_page_preview=True
-            )
+        await event.bot.send_message(
+            event.from_user.id,
+            "🤩 Привет!! Хочешь заработать 200₽ // 400 BC за пару секунд?\n\n Тогда жми кнопку 'ДА'",
+            reply_markup=keyboard)
     except Exception as e:
         print(f"Ошибка при отправке сообщения: {e}")
 
