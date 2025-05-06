@@ -17,7 +17,7 @@ async def payout_callback(call: types.CallbackQuery):
         )
         text = (
             "<b>Ты еще не выполнил все условия!</b>\n\n"
-            "1. Зарегистрируйся по ссылке https://hassle.online/ref/Luis_Jerry\n\n"
+            "1. Зарегистрируйся по ссылке https://hassle.online/ref/telega\n\n"
             "2. Пришли мне скриншот регистрации\n\n"
             "И получай свои денежки!!"
         )
