@@ -16,12 +16,7 @@ async def get_menu_data(user_id: int):
 
     if quest_lvl == 1:
         text = (
-            "👋 Привет! Я помогу тебе легко заработать!!\n\n"
-            "💸 Хочешь получить <b>200₽</b> за пару минут? Тогда лови условия:\n\n"
-            "1️⃣ <b>Зарегистрируйся по ссылке: https://hassle.online/ref/telega</b>\n"
-            "2️⃣ <b>Пришли мне скриншот своей регистрации!</b>\n\n"
-            "<i>Проверяем мгновенно! Действуй!</i>\n\n"
-            "📌 <b>ЗАПОМНИ ДАННЫЕ от АККАУНТА!! ПРИГОДИТСЯ ДЛЯ ПРОВЕРКИ!!</b>"
+            "😭 <b>К сожалению выплаты по 200 рублей закончились, но ты можешь получить 600 рублей!! Жми 'ХОЧУ'</b>"
         )
     else:
         text = (
@@ -44,15 +39,23 @@ async def get_menu_data(user_id: int):
         )
         photo = os.path.join(os.path.dirname(__file__), '..', 'img', 'sber.jpg')
 
-    keyboard = types.InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                types.InlineKeyboardButton(text="Выплата", callback_data="payout"),
-                types.InlineKeyboardButton(text="Отзывы", callback_data="reviews"),
-                types.InlineKeyboardButton(text="Баланс", callback_data="balance"),
+    if quest_lvl == 1:
+        keyboard = types.InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    types.InlineKeyboardButton(text="ХОЧУ", callback_data="get_600"),]
             ]
-        ]
-    )
+        )
+    else:
+        keyboard = types.InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    types.InlineKeyboardButton(text="Выплата", callback_data="payout"),
+                    types.InlineKeyboardButton(text="Отзывы", callback_data="reviews"),
+                    types.InlineKeyboardButton(text="Баланс", callback_data="balance"),
+                ]
+            ]
+        )
 
     return text, keyboard, photo
 
@@ -75,6 +78,7 @@ async def cmd_start(message: types.Message):
 
 @router.chat_join_request()
 async def handle_join_request(event: ChatJoinRequest):
+    print("хук")
     # Добавляем пользователя в БД
     await db.execute(
         "INSERT INTO users (telegram_id, username) VALUES ($1, $2) ON CONFLICT DO NOTHING",
@@ -157,3 +161,10 @@ async def menu_callback(call: types.CallbackQuery):
         await call.message.answer("Меню", reply_markup=keyboard)
     else:
         await call.message.answer(text, reply_markup=keyboard, disable_web_page_preview=True)
+
+@router.callback_query(lambda c: c.data == "get_600")
+async def get_600_callback(call: types.CallbackQuery):
+    await call.answer()
+    # ставим типу 2 лвл и кидаем опять главное меню
+    await db.execute("UPDATE users SET quest_lvl = 2, has_sent_screenshot = True WHERE telegram_id = $1", call.from_user.id)
+    await menu_callback(call)
