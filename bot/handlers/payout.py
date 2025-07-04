@@ -23,7 +23,7 @@ async def payout_callback(call: types.CallbackQuery):
         )
         await call.message.answer(text, reply_markup=menu_keyboard)
         return
-    elif user["balance"] < 500:
+    elif user["balance"] < 750:
         menu_keyboard = types.InlineKeyboardMarkup(
             inline_keyboard=[
                 [types.InlineKeyboardButton(text="Получить", callback_data="menu")]

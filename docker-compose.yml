@@ -33,5 +33,5 @@ services:
     
 
 volumes:
-  pgdata:
+  pgdata_v2:
   redisdata:
