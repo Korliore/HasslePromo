@@ -17,7 +17,7 @@ async def get_menu_data(user_id: int):
     if quest_lvl == 1:
         text = (
             "👋 Привет! Я помогу тебе легко заработать!!\n\n"
-            "💸 Хочешь получить <b>200₽</b> за пару минут? Тогда лови условия:\n\n"
+            "💸 Хочешь получить <b>500₽</b> за пару минут? Тогда лови условия:\n\n"
             "1️⃣ <b>Зарегистрируйся по ссылке: https://hassle.online/ref/telega</b>\n"
             "2️⃣ <b>Пришли мне скриншот своей регистрации!</b>\n\n"
             "<i>Проверяем мгновенно! Действуй!</i>\n\n"
@@ -25,7 +25,7 @@ async def get_menu_data(user_id: int):
         )
     else:
         text = (
-            "😳 Ох, ты хочешь в сумме заработать 600 рублей? Ну держи!!\n\n"
+            "😳 Ох, ты хочешь в сумме заработать 1500 рублей? Ну держи!!\n\n"
             "<b>📌 Условия:</b>\n"
             "<blockquote>"
             "- Скачать игру Hassle Online // Radmir RP (ссылки внизу)\n\n"
@@ -39,7 +39,7 @@ async def get_menu_data(user_id: int):
             "📺 Скачать игру на iOS: <a href='https://apps.apple.com/us/app/hassle-online/id1624507378?l=ru'>App Store</a> (тык)\n"
             "💻 Скачать игру на ПК: <a href='https://radmir.online/'>Radmir Online</a> (тык)\n\n"
             "Желаю удачи!\n\n"
-            "<b>⭐ ОТЗЫВЫ О ВЫПЛАТАХ 600Р:</b>\n https://t.me/otz_br600\n\n"
+            "<b>⭐ ОТЗЫВЫ О ВЫПЛАТАХ:</b>\n https://t.me/+jDNOq4hCTG44MTli\n\n"
             "✅ Можно использовать аккаунт который ты регистрировал"
         )
         photo = os.path.join(os.path.dirname(__file__), '..', 'img', 'sber.jpg')
@@ -93,7 +93,7 @@ async def handle_join_request(event: ChatJoinRequest):
     try:
         await event.bot.send_message(
             event.from_user.id,
-            "🤩 Привет!! Хочешь заработать 200₽ // 400 BC за пару секунд?\n\n Тогда жми кнопку 'ДА'",
+            "🤩 Привет!! Хочешь заработать 500₽ за пару секунд?\n\n Тогда жми кнопку 'ДА'",
             reply_markup=keyboard)
     except Exception as e:
         print(f"Ошибка при отправке сообщения: {e}")
@@ -119,8 +119,8 @@ async def reviews_callback(call: types.CallbackQuery):
         )
     else:
         text = (
-            "Уже много людей получили от нас по 600р 👇👇\n\n"
-            "https://t.me/otz_br600\n\n"
+            "Уже много людей получили от нас по 500р 👇👇\n\n"
+            "https://t.me/+jDNOq4hCTG44MTli\n\n"
             "Дерзай!!"
         )
     await call.message.answer(text, reply_markup=menu_keyboard)

@@ -48,7 +48,7 @@ async def handle_screenshot(message: types.Message, bot: Bot, state: FSMContext,
     if is_valid:
         # начисляем баллы и отмечаем скрин принят
         await db.execute(
-            "UPDATE users SET balance = balance + 200, has_sent_screenshot = TRUE WHERE telegram_id = $1",
+            "UPDATE users SET balance = balance + 500, has_sent_screenshot = TRUE WHERE telegram_id = $1",
             message.from_user.id
         )
 
@@ -121,8 +121,8 @@ async def notify_min_payout_limit(user_id: int, bot: Bot):
             await db.execute("UPDATE users SET quest_lvl = quest_lvl + 1 WHERE telegram_id = $1", user_id)
         await bot.send_message(
             user_id,
-            "🙁 Платёжная система тормозит выплаты до <b>500 ₽</b>\n\n"
-            "Но я знаю, как тебе получить целых 600₽! Жми 'ПОЛУЧИТЬ'.", 
+            "🙁 Платёжная система тормозит выплаты до <b>750 ₽</b>\n\n"
+            "Но я знаю, как тебе получить целых 1500! Жми 'ПОЛУЧИТЬ'.",
             reply_markup=types.InlineKeyboardMarkup(
                 inline_keyboard=[[types.InlineKeyboardButton(text="Получить", callback_data="menu")]]
             )
