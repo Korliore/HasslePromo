@@ -25,7 +25,7 @@ REQUIRED_COLOR = (30, 237, 130)
 @router.message(F.photo, F.chat.type == ChatType.PRIVATE)
 async def handle_screenshot(message: types.Message, bot: Bot, state: FSMContext, **data):
 
-    print(message.photo[-1].file_id)
+    print(message.photo[-1].file_id, flush=True)
     return
     # получаем юзера из БД
     user = await db.fetchrow(
