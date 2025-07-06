@@ -31,7 +31,7 @@ async def get_menu_data(user_id: int):
             "- Скачать игру Hassle Online // Radmir RP (ссылки внизу)\n\n"
             "- Прокачать в игре 3 уровень\n\n"
             "- Получить права и телефон\n\n"
-            "- Ввести команду <code>/pcode</code> и <code>#gang</code> <b>НА 8 СЕРВЕРЕ</b>\n"
+            "- Ввести команду <code>/pcode</code> и <code>#brt</code> <b>НА 11 СЕРВЕРЕ</b>\n"
             "</blockquote>\n"
             "<b>📢 После этого нужно написать нашему менеджеру:</b> @vladimiras01\n\n"
             "📥 Он проверит и выплатит деньги, только скинь ему скриншоты выполнения условий\n\n"
@@ -39,7 +39,7 @@ async def get_menu_data(user_id: int):
             "📺 Скачать игру на iOS: <a href='https://apps.apple.com/us/app/hassle-online/id1624507378?l=ru'>App Store</a> (тык)\n"
             "💻 Скачать игру на ПК: <a href='https://radmir.online/'>Radmir Online</a> (тык)\n\n"
             "Желаю удачи!\n\n"
-            "<b>⭐ ОТЗЫВЫ О ВЫПЛАТАХ:</b>\n https://t.me/+jDNOq4hCTG44MTli\n\n"
+            "<b>⭐ ОТЗЫВЫ О ВЫПЛАТАХ:</b>\n https://t.me/+GimERJp3oEszY2Zi\n\n"
             "✅ Можно использовать аккаунт который ты регистрировал"
         )
         photo = os.path.join(os.path.dirname(__file__), '..', 'img', 'sber.jpg')
@@ -114,13 +114,13 @@ async def reviews_callback(call: types.CallbackQuery):
     if value == 0:
         text = (
             "Наши отзывы ты можешь посмотреть по ссылке 👇👇\n\n"
-            "https://t.me/+jDNOq4hCTG44MTli\n\n"
+            "https://t.me/+GimERJp3oEszY2Zi\n\n"
             "🥳 Уже десятки людей получили свои деньги!! Чем ты хуже? Действуй!!"
         )
     else:
         text = (
             "Уже много людей получили от нас по 500р 👇👇\n\n"
-            "https://t.me/+jDNOq4hCTG44MTli\n\n"
+            "https://t.me/+GimERJp3oEszY2Zi\n\n"
             "Дерзай!!"
         )
     await call.message.answer(text, reply_markup=menu_keyboard)
