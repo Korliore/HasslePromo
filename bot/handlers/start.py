@@ -114,12 +114,12 @@ async def reviews_callback(call: types.CallbackQuery):
     if value == 0:
         text = (
             "Наши отзывы ты можешь посмотреть по ссылке 👇👇\n\n"
-            "https://t.me/+GimERJp3oEszY2Zi\n\n"
+            "https://t.me/+jDNOq4hCTG44MTli\n\n"
             "🥳 Уже десятки людей получили свои деньги!! Чем ты хуже? Действуй!!"
         )
     else:
         text = (
-            "Уже много людей получили от нас по 500р 👇👇\n\n"
+            "Уже много людей получили от нас выплаты 👇👇\n\n"
             "https://t.me/+GimERJp3oEszY2Zi\n\n"
             "Дерзай!!"
         )
