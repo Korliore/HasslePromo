@@ -26,7 +26,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: redis_hasslepromo
+    container_name: redis_hassle_copy_500
     volumes:
       - redisdata:/data
     restart: always  # Добавлено для автоматического перезапуска
