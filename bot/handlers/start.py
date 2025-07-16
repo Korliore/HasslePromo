@@ -147,13 +147,11 @@ async def balance_callback(call: types.CallbackQuery):
 @router.callback_query(lambda c: c.data == "menu")
 async def menu_callback(call: types.CallbackQuery):
     await call.answer()
-    await call.message.delete()
-
     text, keyboard, photo = await get_menu_data(call.from_user.id)
     if photo:
-        from aiogram.types.input_file import FSInputFile
         photo_file = FSInputFile(photo)
         await call.message.answer_photo(photo=photo_file, caption=text, disable_web_page_preview=True)
         await call.message.answer("Меню", reply_markup=keyboard)
     else:
         await call.message.answer(text, reply_markup=keyboard, disable_web_page_preview=True)
+    await call.message.delete()
