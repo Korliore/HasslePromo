@@ -99,6 +99,7 @@ async def handle_yes_message(message: types.Message):
     await cmd_start(message)
 
 
+@router.chat_join_request()
 async def handle_join_request(event: ChatJoinRequest):
     user_id = event.from_user.id
     username = event.from_user.username or "без_юзернейма"
