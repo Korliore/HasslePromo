@@ -2,6 +2,7 @@ version: "3.9"
 services:
   postgres:
     image: postgres:15
+    container_name: postgres_hassle_copy_500
     environment:
       POSTGRES_DB: hasslepromo
       POSTGRES_USER: user
