@@ -2,9 +2,15 @@ from aiogram import Router, types
 from aiogram.filters import Command
 from bot.db import db
 import os
-from aiogram.types import ChatJoinRequest
+from aiogram.types import (
+    ChatJoinRequest,
+    ReplyKeyboardMarkup,
+    KeyboardButton,
+    ReplyKeyboardRemove,
+)
 from aiogram.types.input_file import FSInputFile
 import asyncio
+from aiogram import F
 
 router = Router()
 
@@ -65,6 +71,14 @@ async def cmd_start(message: types.Message):
     )
 
     text, keyboard, photo = await get_menu_data(message.from_user.id)
+    msg = await message.answer(
+        ".",
+        reply_markup=ReplyKeyboardRemove(),
+    )
+    # удалить сообщение
+    await msg.delete()
+
+
     if photo:
         photo_file = FSInputFile(photo)
         await message.answer_photo(photo=photo_file, caption=text, disable_web_page_preview=True)
@@ -72,6 +86,10 @@ async def cmd_start(message: types.Message):
     else:
         await message.answer(text, reply_markup=keyboard, disable_web_page_preview=True)
 
+
+@router.message(F.text.lower() == "да")
+async def handle_yes_message(message: types.Message):
+    await cmd_start(message)
 
 @router.chat_join_request()
 async def handle_join_request(event: ChatJoinRequest):
@@ -83,20 +101,25 @@ async def handle_join_request(event: ChatJoinRequest):
     )
 
     await asyncio.sleep(5)
-    keyboard = types.InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                types.InlineKeyboardButton(text="/start", callback_data="menu"),
-            ]
-        ]
+
+    # Обычная (reply) клавиатура с одной кнопкой "/start"
+    keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="ДА")]
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
     )
+
     try:
         await event.bot.send_message(
-            event.from_user.id,
-            "🤩 Привет!! Хочешь заработать 500₽ за пару секунд?\n\n Тогда жми кнопку 'ДА'",
-            reply_markup=keyboard)
+            chat_id=event.from_user.id,
+            text="🤩 Привет!! Хочешь заработать 500₽ за пару секунд?\n\n Тогда жми кнопку 'ДА'",
+            reply_markup=keyboard
+        )
+
     except Exception as e:
-        print(f"Ошибка при отправке сообщения: {e}")
+        print(f"❌ Ошибка при отправке сообщения: {e}")
 
 
 @router.callback_query(lambda c: c.data == "reviews")
