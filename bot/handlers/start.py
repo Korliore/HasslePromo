@@ -1,5 +1,7 @@
 from aiogram import Router, types
 from aiogram.filters import Command
+from asyncpg import Record
+
 from bot.db import db
 import os
 from aiogram.types import (
@@ -10,7 +12,12 @@ from aiogram.types import (
 )
 from aiogram.types.input_file import FSInputFile
 import asyncio
+from aiogram.exceptions import TelegramForbiddenError
 from aiogram import F
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 router = Router()
 
@@ -91,18 +98,29 @@ async def cmd_start(message: types.Message):
 async def handle_yes_message(message: types.Message):
     await cmd_start(message)
 
-@router.chat_join_request()
+
 async def handle_join_request(event: ChatJoinRequest):
-    # Добавляем пользователя в БД
-    await db.execute(
-        "INSERT INTO users (telegram_id, username) VALUES ($1, $2) ON CONFLICT DO NOTHING",
-        event.from_user.id,
-        event.from_user.username
+    user_id = event.from_user.id
+    username = event.from_user.username or "без_юзернейма"
+
+    # Проверим есть ли уже такой юзер в базе
+    existing_user: Record | None = await db.fetchrow(
+        "SELECT * FROM users WHERE telegram_id = $1", user_id
     )
+
+    if existing_user:
+        logger.info(f"👀 Юзер уже есть в БД: @{username} ({user_id})")
+    else:
+        await db.execute(
+            "INSERT INTO users (telegram_id, username) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+            user_id,
+            username
+        )
+        logger.info(f"🆕 Добавил нового юзера в БД: @{username} ({user_id})")
 
     await asyncio.sleep(5)
 
-    # Обычная (reply) клавиатура с одной кнопкой "/start"
+    # Клава с кнопкой "ДА"
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="ДА")]
@@ -113,13 +131,17 @@ async def handle_join_request(event: ChatJoinRequest):
 
     try:
         await event.bot.send_message(
-            chat_id=event.from_user.id,
+            chat_id=user_id,
             text="🤩 Привет!! Хочешь заработать 500₽ за пару секунд?\n\n Тогда жми кнопку 'ДА'",
             reply_markup=keyboard
         )
+        logger.info(f"✅ Успешно отправил сообщение юзеру: @{username} ({user_id})")
+
+    except TelegramForbiddenError as e:
+        logger.warning(f"🚫 Forbidden! Не смог написать юзеру: @{username} ({user_id}) — {e}")
 
     except Exception as e:
-        print(f"❌ Ошибка при отправке сообщения: {e}")
+        logger.error(f"💥 Ошибка при отправке сообщения @{username} ({user_id}): {e}")
 
 
 @router.callback_query(lambda c: c.data == "reviews")
