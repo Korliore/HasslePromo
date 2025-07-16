@@ -82,6 +82,8 @@ async def handle_join_request(event: ChatJoinRequest):
         event.from_user.username
     )
 
+    await event.approve()
+
     await asyncio.sleep(5)
     keyboard = types.InlineKeyboardMarkup(
         inline_keyboard=[
