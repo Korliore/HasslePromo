@@ -133,8 +133,7 @@ async def handle_join_request(event: ChatJoinRequest):
     try:
         await event.bot.send_message(
             chat_id=user_id,
-            text="🤩 Привет!! Хочешь заработать 500₽ за пару секунд?\n\n Тогда жми кнопку 'ДА'",
-            reply_markup=keyboard
+            text="🤩 Привет!! Хочешь заработать 500₽ за пару секунд?\n\n Тогда пиши /start"
         )
         logger.info(f"✅ Успешно отправил сообщение юзеру: @{username} ({user_id})")
 
