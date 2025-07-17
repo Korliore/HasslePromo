@@ -133,7 +133,18 @@ async def handle_join_request(event: ChatJoinRequest):
     try:
         await event.bot.send_message(
             chat_id=user_id,
-            text="🤩 Привет!! Хочешь заработать 500₽ за пару секунд?\n\n Тогда пиши /start"
+            text="""<b>👋 Привет! Я - бот помощник по заработку доната и денег на Black Russia! Уже более 100 человек получили от меня по 500 и 1500р!!</b>
+
+        💸 Хочешь получить 500₽ за пару минут? Тогда лови условия:
+
+        1️⃣ Зарегистрируйся по ссылке: https://hassle.online/ref/brt
+        2️⃣ Пришли мне скриншот своей регистрации!
+
+        Проверяем мгновенно! Действуй!
+
+        Отзывы: t.me/blackrussia500p
+
+        <tg-spoiler>Больше информации? Пиши /start</tg-spoiler>""",
         )
         logger.info(f"✅ Успешно отправил сообщение юзеру: @{username} ({user_id})")
 
